@@ -1,0 +1,504 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Sci-Fi Intro</title>
+    <link href="https://fonts.googleapis.com/css2?family=Anton&display=swap" rel="stylesheet" />
+    <style>
+        body,
+        html {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            background: #ffffff;
+            overflow: hidden;
+        }
+
+        #container {
+            position: relative;
+            width: 100%;
+            height: 100vh;
+        }
+
+        #background-svg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+            opacity: 0.8;
+        }
+
+        #initial-dot {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 6px;
+            height: 6px;
+            background: #cccccc;
+            border-radius: 50%;
+            z-index: 3;
+            opacity: 0;
+        }
+
+        #initial-dot.show {
+            animation: dot-pulse 1s ease-in-out forwards;
+        }
+
+        @keyframes dot-pulse {
+            0% {
+                opacity: 0;
+                transform: translate(-50%, -50%) scale(0.5);
+            }
+
+            30% {
+                opacity: 1;
+                transform: translate(-50%, -50%) scale(1.2);
+            }
+
+            70% {
+                opacity: 1;
+                transform: translate(-50%, -50%) scale(1);
+            }
+
+            100% {
+                opacity: 0;
+                transform: translate(-50%, -50%) scale(0.8);
+            }
+        }
+
+        #glass {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 50vh;
+            background: linear-gradient(to top,
+                    rgba(200, 200, 200, 0.4),
+                    rgba(240, 240, 240, 0.1));
+            backdrop-filter: blur(8px);
+            /* Stronger blur for more "frosted glass" feel */
+            -webkit-backdrop-filter: blur(8px);
+            /* Safari support */
+            transform: translateY(100%);
+            z-index: 2;
+            border-top: 1px solid rgba(255, 255, 255, 0.4);
+            /* Optional: subtle top edge glow */
+            box-shadow: 0 -10px 20px rgba(0, 0, 0, 0.05);
+            /* Optional: soft shadow for depth */
+            opacity: 1;
+        }
+
+        #glass.appear {
+            animation: glass-appear 0.8s ease-out forwards;
+            /* Slightly slower for smoother rise */
+            opacity: 0.5;
+        }
+
+        @keyframes glass-appear {
+            to {
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes glass-appear {
+            to {
+                transform: translateY(0);
+            }
+        }
+
+        #horizon {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: #cccccc;
+            z-index: 3;
+            width: 4px;
+            height: 4px;
+            border-radius: 50%;
+            opacity: 0;
+            /* Hide it until animation starts */
+        }
+
+        #horizon.expand {
+            animation: horizon-expand 0.5s forwards;
+            opacity: 1;
+            /* Make visible when expanding */
+        }
+
+        @keyframes horizon-expand {
+            from {
+                width: 4px;
+                height: 4px;
+                border-radius: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+            }
+
+            to {
+                width: 100vw;
+                height: 2px;
+                border-radius: 0;
+                left: 0;
+                transform: translate(0, -50%);
+            }
+        }
+
+        #vertical-line {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: #505050;
+            z-index: 4;
+            width: 4px;
+            height: 4px;
+            border-radius: 50%;
+        }
+
+        #vertical-line.expand {
+            animation: vertical-expand 0.5s forwards;
+        }
+
+        @keyframes vertical-expand {
+            to {
+                width: 2px;
+                height: 50vmin;
+                border-radius: 0;
+            }
+        }
+
+        #vertical-line.to-circle {
+            animation: to-circle 1s forwards;
+        }
+
+        @keyframes to-circle {
+            to {
+                width: 50vmin;
+                border-radius: 50%;
+                transform: translate(-50%, -50%) rotate(360deg);
+            }
+        }
+
+        #vertical-line.smooth-out {
+            animation: smooth-out 0.5s forwards;
+        }
+
+        @keyframes smooth-out {
+            to {
+                filter: blur(20px);
+                opacity: 0;
+            }
+        }
+
+        #logo {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 22vmin;
+            height: auto;
+            z-index: 5;
+            pointer-events: none;
+        }
+
+        #logo path {
+            fill: #000000;
+            fill-opacity: 0;
+            stroke: #000000;
+            stroke-width: 0.362215;
+        }
+
+        #logo path.draw {
+            animation: draw 1s forwards;
+        }
+
+        @keyframes draw {
+            to {
+                stroke-dashoffset: 0;
+            }
+        }
+
+        #logo path.fill {
+            animation: fill 0.5s forwards;
+        }
+
+        @keyframes fill {
+            to {
+                fill-opacity: 1;
+                stroke: none;
+            }
+        }
+
+        #logo text {
+            font-family: "Anton", sans-serif;
+            font-size: 18px;
+            letter-spacing: 0.5px;
+            text-anchor: middle;
+            /* Horizontally center */
+            dominant-baseline: middle;
+            /* Vertically center */
+            opacity: 0;
+            transition: opacity 0.5s;
+            fill: #000000;
+        }
+
+        #logo text.visible {
+            opacity: 1;
+        }
+
+        #logo.pulse-breath {
+            animation: breath 4s infinite ease-in-out;
+        }
+
+        @keyframes breath {
+            0% {
+                transform: translate(-50%, -50%) scale(1);
+            }
+
+            10% {
+                transform: translate(-50%, -50%) scale(1.03);
+            }
+
+            20% {
+                transform: translate(-50%, -50%) scale(1.08);
+            }
+
+            30% {
+                transform: translate(-50%, -50%) scale(1.12);
+            }
+
+            40% {
+                transform: translate(-50%, -50%) scale(1.09);
+            }
+
+            50% {
+                transform: translate(-50%, -50%) scale(1.05);
+            }
+
+            60% {
+                transform: translate(-50%, -50%) scale(0.98);
+            }
+
+            70% {
+                transform: translate(-50%, -50%) scale(0.94);
+            }
+
+            80% {
+                transform: translate(-50%, -50%) scale(0.96);
+            }
+
+            90% {
+                transform: translate(-50%, -50%) scale(1.01);
+            }
+
+            95% {
+                transform: translate(-50%, -50%) scale(1.04);
+            }
+
+            100% {
+                transform: translate(-50%, -50%) scale(1);
+            }
+        }
+
+        #pulse-rings {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 0;
+            height: 0;
+            pointer-events: none;
+            z-index: 3;
+        }
+
+        .ring {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: var(--size);
+            height: var(--size);
+            border: 1px solid rgba(255, 0, 0, 0.95);
+            border-radius: 50%;
+            transform: translate(-50%, -50%) scale(0.8);
+            opacity: 0;
+            animation: pulse var(--duration, 4s) infinite ease-out;
+            animation-delay: var(--delay);
+        }
+
+        @keyframes pulse {
+            0% {
+                transform: translate(-50%, -50%) scale(0.8);
+                opacity: 0;
+            }
+
+            15% {
+                opacity: 0.6;
+            }
+
+            80% {
+                transform: translate(-50%, -50%) scale(2.2);
+                opacity: 0.4;
+            }
+
+            100% {
+                transform: translate(-50%, -50%) scale(2.5);
+                opacity: 0;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div id="container">
+        <svg id="background-svg" viewBox="0 0 1920 1080" xmlns="http://www.w3.org/2000/svg">
+            <!-- Generated dynamically -->
+        </svg>
+        <div id="initial-dot"></div>
+        <div id="glass"></div>
+        <div id="horizon"></div>
+        <div id="vertical-line"></div>
+        <div id="pulse-rings">
+            <div class="ring" style="--size: 260px; --delay: 5.8s;"></div>
+            <div class="ring" style="--size: 300px; --delay: 6.1s;"></div>
+            <div class="ring" style="--size: 340px; --delay: 6.4s;"></div>
+            <div class="ring" style="--size: 380px; --delay: 6.7s;"></div>
+            <div class="ring" style="--size: 420px; --delay: 7.0s;"></div>
+        </div>
+        <svg id="logo" version="1.1" viewBox="0 0 28.799999 31.360001">
+            <g>
+                <path id="path3194"
+                    d="M 14.435547,0 A 15.602184,15.72 0 0 0 0.21679688,9.2597656 H 28.654297 A 15.602184,15.72 0 0 0 14.435547,0 Z M 0.15820312,22.021484 A 15.602184,15.72 0 0 0 14.435547,31.439453 15.602184,15.72 0 0 0 28.710938,22.021484 Z" />
+                <text x="14.435547" y="16.68">45K</text>
+                <!-- Centered on the exact middle of the viewBox -->
+            </g>
+        </svg>
+    </div>
+    <script>
+        function generateBackground() {
+            const svg = document.getElementById("background-svg");
+            const width = 1920;
+            const height = 1080;
+
+            for (let i = 0; i < 200; i++) {
+                let x1 = Math.random() * width;
+                let y1 = Math.random() * height;
+                let angle = Math.random() * 2 * Math.PI;
+                let length = 10 + Math.random() * 40;
+                let x2 = x1 + length * Math.cos(angle);
+                let y2 = y1 + length * Math.sin(angle);
+
+                let line = document.createElementNS(
+                    "http://www.w3.org/2000/svg",
+                    "line"
+                );
+                line.setAttribute("x1", x1);
+                line.setAttribute("y1", y1);
+                line.setAttribute("x2", x2);
+                line.setAttribute("y2", y2);
+                line.setAttribute("stroke", "#f0f0f0");
+                line.setAttribute("stroke-width", "0.5");
+                svg.appendChild(line);
+            }
+
+            for (let i = 0; i < 100; i++) {
+                let cx = Math.random() * width;
+                let cy = Math.random() * height;
+                let r = 1 + Math.random() * 2;
+
+                let circle = document.createElementNS(
+                    "http://www.w3.org/2000/svg",
+                    "circle"
+                );
+                circle.setAttribute("cx", cx);
+                circle.setAttribute("cy", cy);
+                circle.setAttribute("r", r);
+                circle.setAttribute("fill", "#333333");
+                svg.appendChild(circle);
+            }
+        }
+
+        window.onload = function () {
+            generateBackground();
+
+            let path = document.querySelector("#logo path");
+            let length = path.getTotalLength();
+            path.style.strokeDasharray = length;
+            path.style.strokeDashoffset = length;
+
+            // 0.5s: Show pulsing dot, disappears at 1.5s
+            setTimeout(() => {
+                document.getElementById("initial-dot").classList.add("show");
+            }, 500);
+
+            // 1.5s: Glass surface appears
+            setTimeout(() => {
+                document.getElementById("glass").classList.add("appear");
+            }, 1500);
+
+            // 2.5s: Horizon line expands
+            setTimeout(() => {
+                document.getElementById("horizon").classList.add("expand");
+            }, 2500);
+
+            // 3.5s: Vertical line → circle → fade
+            setTimeout(() => {
+                let vline = document.getElementById("vertical-line");
+                vline.classList.add("expand");
+                setTimeout(() => {
+                    vline.classList.add("to-circle");
+                }, 500);
+                setTimeout(() => {
+                    vline.classList.add("smooth-out");
+                }, 1500);
+            }, 3500);
+
+            // 5.5s: Logo draw + fill + text
+            setTimeout(() => {
+                path.classList.add("draw");
+                setTimeout(() => {
+                    path.classList.add("fill");
+                    document.querySelector("#logo text").classList.add("visible");
+                    // Start subtle breathing pulse shortly after reveal
+                    setTimeout(() => {
+                        document.getElementById("logo").classList.add("pulse-breath");
+                    }, 300);
+                }, 1000);
+            }, 5500);
+        };
+
+
+        // Generate 5 random pulse rings
+        const pulseContainer = document.getElementById('pulse-rings');
+        const ringSizes = [260, 300, 340, 380, 420]; // diameters in px
+        const minDuration = 3.5;
+        const maxDuration = 6;
+        const minDelay = 5.5; // start pulsing after logo appears
+
+        for (let i = 0; i < 5; i++) {
+            const ring = document.createElement('div');
+            ring.className = 'ring';
+
+            const size = ringSizes[i];
+            const duration = (Math.random() * (maxDuration - minDuration) + minDuration).toFixed(2);
+            const delay = (minDelay + Math.random() * 2).toFixed(2); // random spread after logo
+
+            ring.style.setProperty('--size', `${size}px`);
+            ring.style.setProperty('--duration', `${duration}s`);
+            ring.style.setProperty('--delay', `${delay}s`);
+
+            // Optional: slight color variation for depth
+            const opacity = 0.3 + Math.random() * 0.2;
+            ring.style.borderColor = `rgba(130, 130, 130, ${opacity})`;
+
+            pulseContainer.appendChild(ring);
+        }
+    </script>
+</body>
+
+</html>
