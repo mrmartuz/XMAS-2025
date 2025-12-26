@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Sci-Fi Intro</title>
+    <title>45K-XMAS-2025</title>
     <link href="https://fonts.googleapis.com/css2?family=Anton&display=swap" rel="stylesheet" />
     <style>
         body,
@@ -351,12 +351,88 @@
                 opacity: 0;
             }
         }
+
+        #xmas-text {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-family: "Anton", sans-serif;
+            font-size: clamp(12px, 6vw, 12px);
+            color: #ff0000;
+            text-align: center;
+            z-index: 6;
+            opacity: 0;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            pointer-events: none;
+            text-shadow:
+                0 0 10px rgba(255, 0, 0, 0.8),
+                0 0 20px rgba(255, 0, 0, 0.6),
+                0 0 30px rgba(255, 0, 0, 0.4);
+        }
+
+        #xmas-text.show {
+            animation: xmas-appear 0.8s ease-out forwards, xmas-flash 1.5s ease-in-out infinite;
+        }
+
+        @keyframes xmas-appear {
+            0% {
+                opacity: 0;
+                transform: translate(-50%, -50%) scale(0.5);
+            }
+
+            100% {
+                opacity: 1;
+                transform: translate(-50%, -50%) scale(1);
+            }
+        }
+
+        @keyframes xmas-flash {
+
+            0%,
+            100% {
+                color: white;
+                text-shadow:
+                    0 0 10px rgba(255, 0, 0, 0.8),
+                    0 0 20px rgba(255, 0, 0, 0.6),
+                    0 0 30px rgba(255, 0, 0, 0.4);
+                transform: translate(-50%, -50%) scale(1);
+            }
+
+            25% {
+                color: white;
+                text-shadow:
+                    0 0 15px rgba(255, 51, 51, 1),
+                    0 0 30px rgba(255, 51, 51, 0.8),
+                    0 0 45px rgba(255, 51, 51, 0.6);
+                transform: translate(-50%, -50%) scale(1.05);
+            }
+
+            50% {
+                color: white;
+                text-shadow:
+                    0 0 20px rgba(255, 0, 0, 1),
+                    0 0 40px rgba(255, 0, 0, 0.9),
+                    0 0 60px rgba(255, 0, 0, 0.7);
+                transform: translate(-50%, -50%) scale(1.1);
+            }
+
+            75% {
+                color: white;
+                text-shadow:
+                    0 0 15px rgba(255, 51, 51, 1),
+                    0 0 30px rgba(255, 51, 51, 0.8),
+                    0 0 45px rgba(255, 51, 51, 0.6);
+                transform: translate(-50%, -50%) scale(1.05);
+            }
+        }
     </style>
 </head>
 
 <body>
     <div id="container">
-        <svg id="background-svg" viewBox="0 0 1920 1080" xmlns="http://www.w3.org/2000/svg">
+        <svg id="background-svg" xmlns="http://www.w3.org/2000/svg">
             <!-- Generated dynamically -->
         </svg>
         <div id="initial-dot"></div>
@@ -378,12 +454,16 @@
                 <!-- Centered on the exact middle of the viewBox -->
             </g>
         </svg>
+        <div id="xmas-text">HAPPY XMAS 2025</div>
     </div>
     <script>
         function generateBackground() {
             const svg = document.getElementById("background-svg");
-            const width = 1920;
-            const height = 1080;
+            const width = window.innerWidth;
+            const height = window.innerHeight;
+
+            // Update SVG viewBox to match viewport
+            svg.setAttribute("viewBox", `0 0 ${width} ${height}`);
 
             for (let i = 0; i < 200; i++) {
                 let x1 = Math.random() * width;
@@ -470,6 +550,11 @@
                     }, 300);
                 }, 1000);
             }, 5500);
+
+            // 7s: Show flashy XMAS text
+            setTimeout(() => {
+                document.getElementById("xmas-text").classList.add("show");
+            }, 7000);
         };
 
 
